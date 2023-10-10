@@ -21,3 +21,14 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=django_db
+      - POSTGRES_PASSWORD=django_password
+      - POSTGRES_DB=django_db
+
+volumes:
+  postgres_data:
