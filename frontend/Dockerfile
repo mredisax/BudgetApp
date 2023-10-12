@@ -1,24 +1,19 @@
-# Use the official Node.js image as the base image
-FROM node:18
+# Użyj oficjalnego obrazu Node.js jako bazowego obrazu
+FROM node:14
 
-# Set the working directory in the container
+# Ustaw katalog roboczy na /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
-COPY ./frontend/package*.json ./
-
-# Install app dependencies
+# Skopiuj pliki package.json i package-lock.json i zainstaluj zależności
+COPY frontend/package*.json ./
 RUN npm install
 
-# Copy the rest of the React app code to the container
-COPY ./frontend .
+# Skopiuj resztę kodu frontendu
+COPY frontend .
 
-# Build the React app
+# Skompiluj aplikację Vue
 RUN npm run build
 
-# Expose port 3000 for the React app
-EXPOSE 3000
 
-# Start the React app when the container runs
-CMD ["npm", "start"]
-
+EXPOSE 8080
+CMD [ "npm", "run", "serve" ]
