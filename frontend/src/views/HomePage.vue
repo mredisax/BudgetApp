@@ -16,7 +16,7 @@
             <!-- breadcrumb end -->
 
             <div class="lg:flex justify-between items-center mb-6">
-              <p class="text-2xl font-semibold mb-2 lg:mb-0">Budget name: Test</p>
+              <p class="text-2xl font-semibold mb-2 lg:mb-0">Budget name: {{ budgetName }}</p>
             </div>
 
             <div class="flex flex-wrap -mx-3 mb-20">
@@ -92,7 +92,7 @@
                 <p class="text-xl font-semibold mb-4">Recent Transactions</p>
                 <div class="w-full bg-white border rounded-lg p-4">
                   
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+<!-- <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -201,7 +201,7 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div> -->
 
                 </div>
               </div>
@@ -212,91 +212,99 @@
 </template>
 
 <script>
-import { Chart } from 'chart.js/auto';
+// import { Chart } from 'chart.js/auto';
+import axios from 'axios';
 
 export default {
-    name: 'DashboardHome',
-    data() {
-        return {
-            buyersData: {
-                type: 'line',
-                data: {
-                    labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-                    datasets:[{
-                        backgroundColor : "rgba(99,179,237,0.4)",
-                        strokeColor : "#63b3ed",
-                        pointColor : "#fff",
-                        pointStrokeColor : "#63b3ed",
-                        data : [203,156,99,251,305,247,256]
-                    },
-                    {
-                        backgroundColor : "rgba(198,198,198,0.4)",
-                        strokeColor : "#f7fafc",
-                        pointColor : "#fff",
-                        pointStrokeColor : "#f7fafc",
-                        data : [86,97,144,114,94,108,156]
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                display:false
-                            },  
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                        xAxes: [{
-                            gridLines: {
-                                display: false
-                            }
-                        }]
-                    }
-                }
-            },
-            reviewsData: {
-                type: 'bar',
-                data: {
-                    labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-                    datasets:[{
-                        backgroundColor : "rgba(99,179,237,0.4)",
-                        strokeColor : "#63b3ed",
-                        pointColor : "#fff",
-                        pointStrokeColor : "#63b3ed",
-                        data : [203,156,99,251,305,247,256]
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                display:false
-                            },  
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                        xAxes: [{
-                            gridLines: {
-                                display: false
-                            }
-                        }]
-                    }
-                }
+name: 'DashboardHome',
+  data() {
+    return {
+      budgetName: 'Default', // Initialize budgetName with a default value
+    };
+  },
+};
 
-            }
-        }
-    },
-    mounted () {
-        new Chart(document.getElementById('buyers-chart'), this.buyersData)
-        // new Chart(document.getElementById('reviews-chart'), this.reviewsData)
-    }
-}
+        
+
+            // buyersData: {
+            //     type: 'line',
+            //     data: {
+            //         labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+            //         datasets:[{
+            //             backgroundColor : "rgba(99,179,237,0.4)",
+            //             strokeColor : "#63b3ed",
+            //             pointColor : "#fff",
+            //             pointStrokeColor : "#63b3ed",
+            //             data : [203,156,99,251,305,247,256]
+            //         },
+            //         {
+            //             backgroundColor : "rgba(198,198,198,0.4)",
+            //             strokeColor : "#f7fafc",
+            //             pointColor : "#fff",
+            //             pointStrokeColor : "#f7fafc",
+            //             data : [86,97,144,114,94,108,156]
+            //         }]
+            //     },
+            //     options: {
+            //         legend: {
+            //             display: false
+            //         },
+            //         scales: {
+            //             yAxes: [{
+            //                 gridLines: {
+            //                     display:false
+            //                 },  
+            //                 ticks: {
+            //                     display: false
+            //                 }
+            //             }],
+            //             xAxes: [{
+            //                 gridLines: {
+            //                     display: false
+            //                 }
+            //             }]
+            //         }
+            //     }
+            // },
+            // reviewsData: {
+            //     type: 'bar',
+            //     data: {
+            //         labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+            //         datasets:[{
+            //             backgroundColor : "rgba(99,179,237,0.4)",
+            //             strokeColor : "#63b3ed",
+            //             pointColor : "#fff",
+            //             pointStrokeColor : "#63b3ed",
+            //             data : [203,156,99,251,305,247,256]
+            //         }]
+            //     },
+            //     options: {
+            //         legend: {
+            //             display: false
+            //         },
+            //         scales: {
+            //             yAxes: [{
+            //                 gridLines: {
+            //                     display:false
+            //                 },  
+            //                 ticks: {
+            //                     display: false
+            //                 }
+            //             }],
+            //             xAxes: [{
+            //                 gridLines: {
+            //                     display: false
+            //                 }
+            //             }]
+            //         }
+            //     }
+
+            // },
+        // }
+    // },
+//     mounted () {
+//         new Chart(document.getElementById('buyers-chart'), this.buyersData)
+//         // new Chart(document.getElementById('reviews-chart'), this.reviewsData)
+//     }
+// }
 </script>

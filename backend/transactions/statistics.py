@@ -19,16 +19,13 @@ class Statistics:
 
     def calculate_total_amount(self):
         total_amount = sum(transaction.amount for transaction in self.transactions)
-        print(total_amount)
         return total_amount
 
     def calculate_monthly_amounts(self):
         monthly_amounts = 0
         for transaction in self.transactions:
-            print(transaction)
             if transaction.created_at.month == self.now.month:
                 monthly_amounts += transaction.amount
-        print(monthly_amounts)
         return monthly_amounts or 0.0
 
     def calculate_daily_amounts(self):

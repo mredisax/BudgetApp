@@ -9,13 +9,13 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Copy the requirements file to the container
-COPY ./backend/requirements.txt .
+COPY ./requirements.txt .
 
 # Install app dependencies
 RUN pip install -r requirements.txt
 
 # Copy the rest of the Django project code to the container
-COPY ./backend .
+COPY . .
 
 # Expose port 8000 for the Django application
 EXPOSE 8000

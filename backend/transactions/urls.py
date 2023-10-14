@@ -1,13 +1,15 @@
 from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 urlpatterns = [
     # API endpoints for budgets
-    path('api/transactions/', views.TransactionListView.as_view(), name='transaction-list'),
+    path('transactions/', views.TransactionListView.as_view(), name='transaction-list'),
+    path('categories', views.TransactionCategoryView.as_view(), name='transaction-category'),
 
-    path('api/budgets/<int:budget_id>/', views.BudgetDetailView.as_view(), name='budget-detail'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
-    path('api/categories', views.TransactionCategoryView.as_view(), name='transaction-category'),
 #     # API endpoints for transactions
 #     path('api/transactions/', views.TransactionListView.as_view(), name='transaction-list'),
 #     path('api/transactions/<int:pk>/', views.TransactionDetailView.as_view(), name='transaction-detail'),

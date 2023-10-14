@@ -20,7 +20,7 @@
   
   import Sidebar from './Sidebar'
   import Navbar from './Navbar'
-  import DashboardHome from '../pages/HomePage.vue';
+  import DashboardHome from '../views/HomePage.vue';
   
   export default {
     name: 'DashBoard',

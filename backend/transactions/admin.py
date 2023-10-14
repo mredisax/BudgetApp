@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Budget, Transaction, Account, TransactionCategory, TransactionTag
+from transactions.models import Transaction, Account, TransactionCategory, TransactionTag
 
 # Register your models here.
 
@@ -29,4 +29,4 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Account, AccountAdmin)
 admin.site.register(TransactionCategory, CategoryAdmin)
 admin.site.register(TransactionTag, TagAdmin)
-admin.site.register(Budget, BudgetAdmin)
+

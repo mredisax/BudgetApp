@@ -5,11 +5,11 @@ FROM node:14
 WORKDIR /app
 
 # Skopiuj pliki package.json i package-lock.json i zainstaluj zależności
-COPY frontend/package*.json ./
+COPY package*.json ./app/
 RUN npm install
 
 # Skopiuj resztę kodu frontendu
-COPY frontend .
+COPY . .
 
 # Skompiluj aplikację Vue
 RUN npm run build

@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions
-from .models import Budget, Transaction, Account, TransactionCategory, TransactionTag
-# from .forms import TransactionForm, TagForm, CategoryForm, BudgetForm
-from .statistics import Statistics
+from transactions.models import Transaction,  TransactionCategory, TransactionTag
+
+from transactions.statistics import Statistics
 from datetime import datetime
 from .serializers import (
     BudgetSerializer,
@@ -16,25 +16,7 @@ from .serializers import (
     TransactionTagSerializer,
 )
 
-class BudgetDetailView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    def get(self, request, budget_id):
-        budget = get_object_or_404(Budget, id=budget_id)
-        serializer = BudgetSerializer(budget)
-        return Response(serializer.data)
-    
-    def post(self, request):
-        serializer = BudgetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, budget_id):
-        budget = get_object_or_404(Budget, id=budget_id)
-        budget.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+# Create your views here.
 class TransactionListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -45,10 +27,16 @@ class TransactionListView(APIView):
         monthly_amounts = statistics.calculate_monthly_amounts()
         daily_amounts = statistics.calculate_daily_amounts()
 
+        context_data = {
+            'total_amount': total_amount, 
+            'monthly_amounts': monthly_amounts, 
+            'daily_amounts': daily_amounts
+        }
+        print(context_data)
         serializer = TransactionSerializer(
             transactions,
             many=True,
-            context={'total_amount': total_amount, 'monthly_amounts': monthly_amounts, 'daily_amounts': daily_amounts}
+            context=context_data
         )
         return Response(serializer.data)
 
@@ -90,4 +78,3 @@ class TransactionCategoryView(APIView):
         category = get_object_or_404(TransactionCategory, id=category_id)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

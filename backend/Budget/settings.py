@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-@+a8p_h_5@)m6vtqdfpou0=2$cix5!1cx-b3gk(v4uu7^!wxw#
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',
+]
 
-
+CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework.authtoken",
     'rest_framework',
-    'BudgetTracker',
+    'corsheaders',
+    'transactions',
+    'budgets',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'Budget.urls'
@@ -73,6 +82,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
+        "rest_framework.authentication.TokenAuthentication",
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
