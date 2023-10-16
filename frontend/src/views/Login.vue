@@ -14,11 +14,11 @@
       </div>
   
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
+        <form class="space-y-6" @submit.prevent="loginUser" method="POST">
           <div>
             <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
             <div class="mt-2">
-              <input id="username" name="username" type="username" autocomplete="username" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input v-model="loginForm.username" id="username" name="username" type="username" autocomplete="username" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
           </div>
   
@@ -27,7 +27,7 @@
               <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
             </div>
             <div class="mt-2">
-              <input id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input  v-model="loginForm.password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
           </div>
   
@@ -64,15 +64,15 @@ export default {
       const data = { username, password };
 
       // Make a POST request to the login API endpoint
-      axios.post('http://localhost:8000/api/login/', data)
+      axios.post('http://localhost:8000/auth/login/', data)
         .then(response => {
           console.log(response.data)
-          // Handle the successful login
-          // Store the token in local storage
-          localStorage.setItem('token', response.data.token);
+          const token = response.data.token;
+        // Store the token in a session variable (e.g., using sessionStorage)
+        sessionStorage.setItem('token', token);
 
-          // Redirect the user to a dashboard or home page
-          this.$router.push('/dashboard');
+        // Redirect the user to a dashboard or home page
+        this.$router.push('/');
         })
         .catch(error => {
           // Handle login error

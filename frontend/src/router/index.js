@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 
 import DashboardHome from '../views/HomePage.vue'
-import LogIn from '../views/LogIn.vue'
+import LogIn from '../views/Login.vue'
 
 
 const routes = [
@@ -18,7 +18,7 @@ const routes = [
   // },
   {
     path: '/login',
-    name: 'LogIn',
+    name: 'test',
     component: LogIn
   },
   
