@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from budgets.models import Budget
-from rest_framework import status
+from rest_framework import status, authentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions
 # Create your views here.
 
 from .serializers import BudgetSerializer
 
-
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 class BudgetDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, budget_id):

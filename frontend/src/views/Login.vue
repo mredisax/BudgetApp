@@ -16,18 +16,20 @@
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" @submit.prevent="loginUser" method="POST">
           <div>
-            <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+            <div class="flex items-center justify-between">
+              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+            </div>
             <div class="mt-2">
-              <input v-model="loginForm.username" id="username" name="username" type="username" autocomplete="username" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input  v-model="username" id="username" name="username" type="username" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
           </div>
-  
+
           <div>
             <div class="flex items-center justify-between">
               <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
             </div>
             <div class="mt-2">
-              <input  v-model="loginForm.password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input  v-model="password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
           </div>
   
@@ -35,11 +37,13 @@
             <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
           </div>
         </form>
-  
+        <div class="notification is-danger" v-if="errors.length">
+                        <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+                    </div>
         <p class="mt-10 text-center text-sm text-gray-500">
           Not a member?
           {{ ' ' }}
-          <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
+          <a href="/signup" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
         </p>
       </div>
     </div>
@@ -49,36 +53,57 @@
 import axios from 'axios';
 
 export default {
-  name: 'LogIn',
-  data() {
-    return {
-      loginForm: {
-        username: '',
-        password: '',
-      },
-    };
-  },
-  methods: {
-    loginUser() {
-      const { username, password } = this.loginForm;
-      const data = { username, password };
-
-      // Make a POST request to the login API endpoint
-      axios.post('http://localhost:8000/auth/login/', data)
-        .then(response => {
-          console.log(response.data)
-          const token = response.data.token;
-        // Store the token in a session variable (e.g., using sessionStorage)
-        sessionStorage.setItem('token', token);
-
-        // Redirect the user to a dashboard or home page
-        this.$router.push('/');
-        })
-        .catch(error => {
-          // Handle login error
-          console.error('Login failed:', error);
-        });
+    name: 'LogIn',
+    data() {
+        return {
+            username: '',
+            password: '',
+            errors: []
+        }
     },
-  },
-};
+    mounted() {
+        document.title = 'Log In'
+    },
+    methods: {
+        async loginUser() {
+            axios.defaults.headers.common["Authorization"] = ""
+
+            localStorage.removeItem("token")
+
+            const formData = {
+                username: this.username,
+                password: this.password
+            }
+
+            await axios
+                .post("/auth/login/", formData)
+                .then(response => {
+                    const token = response.data.token
+                    const username = response.data.username
+                    console.log(response.data)
+                    // this.$store.commit('setToken', token)
+                    
+                    axios.defaults.headers.common["Authorization"] = "Token " + token
+
+                    localStorage.setItem("username", username)
+                    localStorage.setItem("token", token)
+
+                    const toPath = this.$route.query.to || '/'
+
+                    this.$router.push(toPath)
+                })
+                .catch(error => {
+                    if (error.response) {
+                        for (const property in error.response.data) {
+                            this.errors.push(`${property}: ${error.response.data[property]}`)
+                        }
+                    } else {
+                        this.errors.push('Something went wrong. Please try again')
+                        
+                        console.log(JSON.stringify(error))
+                    }
+                })
+        }
+    }
+}
 </script>

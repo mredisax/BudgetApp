@@ -34,3 +34,10 @@ class Statistics:
             if transaction.created_at.day == self.now.day:
                 daily_amounts += transaction.amount
         return daily_amounts or 0.0
+
+    def to_dict(self):
+        return {
+            "total_amount": self.calculate_total_amount(),
+            "monthly_amounts": self.calculate_monthly_amounts(),
+            "daily_amounts": self.calculate_daily_amounts(),
+        }

@@ -7,8 +7,8 @@ urlpatterns = [
     path('transactions/', views.TransactionListView.as_view(), name='transaction-list'),
     path('categories', views.TransactionCategoryView.as_view(), name='transaction-category'),
 
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    # path('login/', LoginView.as_view(), name='login'),
+    # path('logout/', LogoutView.as_view(), name='logout'),
 
 #     # API endpoints for transactions
 #     path('api/transactions/', views.TransactionListView.as_view(), name='transaction-list'),

@@ -4,7 +4,6 @@ services:
   backend:
     build:
       context: ./backend
-      # dockerfile: backend/Dockerfile
     container_name: backend
     ports:
       - "8000:8000"
@@ -15,14 +14,16 @@ services:
   frontend:
     build:
       context: ./frontend
-      # dockerfile: frontend/Dockerfile
     container_name: frontend
     ports:
       - "8080:8080"
     volumes:
       - ./frontend:/app
+    environment:
+      - NODE_ENV="development"
   db:
     image: postgres:15
+    container_name: db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:

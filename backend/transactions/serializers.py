@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from translations.models import Transaction, Account, TransactionCategory, TransactionTag
+from transactions.models import Transaction, Account, TransactionCategory, TransactionTag
 
 
 class TransactionSerializer(serializers.ModelSerializer):

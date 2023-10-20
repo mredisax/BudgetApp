@@ -1,42 +1,25 @@
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework import status, authentication, permissions
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions
 from transactions.models import Transaction,  TransactionCategory, TransactionTag
-
-from transactions.statistics import Statistics
 from datetime import datetime
 from .serializers import (
-    BudgetSerializer,
     TransactionSerializer,
     AccountSerializer,
     TransactionCategorySerializer,
     TransactionTagSerializer,
 )
 
-# Create your views here.
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 class TransactionListView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request):
         transactions = Transaction.objects.filter(account__owner=request.user).prefetch_related('tags')
-        statistics = Statistics(transactions)
-        total_amount = statistics.calculate_total_amount()
-        monthly_amounts = statistics.calculate_monthly_amounts()
-        daily_amounts = statistics.calculate_daily_amounts()
-
-        context_data = {
-            'total_amount': total_amount, 
-            'monthly_amounts': monthly_amounts, 
-            'daily_amounts': daily_amounts
-        }
-        print(context_data)
         serializer = TransactionSerializer(
             transactions,
-            many=True,
-            context=context_data
+            many=True
         )
         return Response(serializer.data)
 
@@ -52,14 +35,16 @@ class TransactionListView(APIView):
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 class TransactionDetailView(APIView):
     def get(self, request, pk):
         transaction = get_object_or_404(Transaction, pk=pk)
         serializer = TransactionSerializer(transaction)
         return Response(serializer.data)
     
-
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 class TransactionCategoryView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request):

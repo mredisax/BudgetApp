@@ -27,7 +27,6 @@
     components: {
       Sidebar,
       Navbar,
-      DashboardHome
     }
   }
   </script>

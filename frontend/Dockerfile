@@ -1,19 +1,34 @@
-# Użyj oficjalnego obrazu Node.js jako bazowego obrazu
 FROM node:16-alpine
 
-
-# Ustaw katalog roboczy na /app
 WORKDIR /app
-# Skopiuj pliki package.json i package-lock.json i zainstaluj zależności
-COPY package*.json /app/
-RUN npm install
 
-# Skopiuj resztę kodu frontendu
-COPY . /app/
+COPY package*.json ./
 
-# Skompiluj aplikację Vue
-RUN npm run build
+RUN yarn add global @vue/cli
 
+RUN yarn install
 
-EXPOSE 8080
-CMD [ "npm", "run", "serve" ]
+COPY . .
+
+CMD [ "yarn", "serve" ]
+
+# # Użyj oficjalnego obrazu Node.js jako bazowego obrazu
+# FROM node:16-alpine
+
+# # RUN npm install -g http-server
+
+# # Ustaw katalog roboczy na /app
+# WORKDIR /app
+# # Skopiuj pliki package.json i package-lock.json i zainstaluj zależności
+# COPY package*.json ./app/
+# RUN npm instal
+
+# # Skopiuj resztę kodu frontendu
+# COPY . .
+
+# # Skompiluj aplikację Vue
+# RUN npm run build
+
+# EXPOSE 8080
+# CMD [ "http-server", "dist" ]
+# # CMD [ "npm", "run", "serve" ]
