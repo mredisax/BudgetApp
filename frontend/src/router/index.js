@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-
-import DashboardHome from '../views/HomePage.vue'
+import store from '../store'
+import HomePage from '../views/HomePage.vue'
 import LogIn from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
 
@@ -9,8 +9,8 @@ import SignUp from '../views/SignUp.vue'
 const routes = [
   {
     path: '/',
-    name: 'DashboardHome',
-    component: DashboardHome,
+    name: 'HomePage',
+    component: HomePage,
     meta: {
       requireLogin: true
   }
@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'test',
+    name: 'LogIn',
     component: LogIn
   },
   
@@ -34,7 +34,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requireLogin && !isAuthenticated)) { // && !store.state.isAuthenticated
+  if (to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) {
     next({ name: 'LogIn', query: { to: to.path } });
   } else {
     next()

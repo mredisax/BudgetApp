@@ -123,7 +123,7 @@
 import axios from 'axios';
 
 export default {
-name: 'DashboardHome',
+name: 'HomePage',
   data() {
     return {
       budgetName: 'Default', // Initialize budgetName with a default value

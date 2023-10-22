@@ -4,7 +4,7 @@
     <div class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r z-30" :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
 
           <div class="w-full h-20 border-b flex px-4 items-center mb-8">
-            <p class="font-semibold text-3xl text-blue-400 pl-4">BudgetApp</p>
+            <p class="font-semibold text-3xl text-blue-400 pl-4"><a href="/">BudgetApp</a></p>
           </div>
 
           <div class="mb-4 px-4">
@@ -45,9 +45,8 @@
 
 
 // import { mapState } from 'vuex'
-
-  
   <script>
+  
   export default {
     name: 'BrandSidebar',
   };
