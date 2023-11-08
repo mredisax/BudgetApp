@@ -80,12 +80,13 @@ export default {
                 .then(response => {
                     const token = response.data.token
                     const username = response.data.username
+                    const username_id = response.data.user_id
                     console.log(response.data)
                     
                     this.$store.commit('setToken', token)
                     
                     axios.defaults.headers.common["Authorization"] = "Token " + token
-
+                    localStorage.setItem("username_id", username_id)
                     localStorage.setItem("username", username)
                     localStorage.setItem("token", token)
 

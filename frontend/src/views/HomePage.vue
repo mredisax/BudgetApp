@@ -190,6 +190,7 @@ name: 'HomePage',
         { headers: 
           { 'Authorization': axios.defaults.headers.common['Authorization'] } 
         }).then((response) => {
+          console.log(response.data)
           this.transactions = response.data;
         })
         .catch((error) => {

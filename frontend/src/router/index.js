@@ -4,7 +4,7 @@ import store from '../store'
 import HomePage from '../views/HomePage.vue'
 import LogIn from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
-
+import AddBudget from '../views/AddTransaction.vue'
 
 const routes = [
   {
@@ -24,6 +24,11 @@ const routes = [
     path: '/login',
     name: 'LogIn',
     component: LogIn
+  },
+  {
+    path: '/add',
+    name: 'AddBudget',
+    component: AddBudget
   },
   
 ]
