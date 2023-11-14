@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from budgets.models import Budget
 from rest_framework import status, authentication
+from rest_framework_simplejwt import authentication as authjw
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,7 +11,7 @@ from rest_framework import permissions
 
 from .serializers import BudgetSerializer
 
-@authentication_classes([authentication.TokenAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class BudgetDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]

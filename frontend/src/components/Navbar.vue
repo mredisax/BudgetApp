@@ -49,12 +49,22 @@ export default {
           this.$store.dispatch('toggleSidebar')
       },
     logout() {
-      axios.get('/auth/logout/')
+      const refresh = sessionStorage.getItem('refresh_token');
+      const formData = {
+                username: refresh,
+            }
+
+
+      axios.post('/api/auth/logout/', formData)
         .then(() => {
           // Clear user data (e.g., token or user info)
           localStorage.removeItem("token")
           localStorage.removeItem("username")
-          this.$store.commit('setToken', null)
+          localStorage.removeItem("refresh_token")
+          this.$store.commit('removeToken')
+          // this.$store.commit('setToken', null)
+          console.log('Logout successful')
+          
           
           // Redirect to the login page or another page
           this.$router.push('/login'); //

@@ -28,7 +28,10 @@ const routes = [
   {
     path: '/add',
     name: 'AddBudget',
-    component: AddBudget
+    component: AddBudget,
+    meta: {
+      requireLogin: true
+  }
   },
   
 ]

@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, authentication, permissions
+from rest_framework_simplejwt import authentication as authjw
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 from transactions.models import Transaction,  TransactionCategory, TransactionTag
@@ -12,7 +13,7 @@ from .serializers import (
     TransactionTagSerializer,
 )
 
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionListView(APIView):
     def get(self, request):
@@ -37,7 +38,7 @@ class TransactionListView(APIView):
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionDetailView(APIView):
     def get(self, request, pk):
@@ -45,7 +46,7 @@ class TransactionDetailView(APIView):
         serializer = TransactionSerializer(transaction)
         return Response(serializer.data)
     
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionCategoryView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -66,7 +67,7 @@ class TransactionCategoryView(APIView):
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionTagView(APIView):
     def get(self, request):
