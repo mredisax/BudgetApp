@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from rest_framework import status, authentication, permissions
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from stats.serializers import StatisticsSerializer
+from rest_framework_simplejwt import authentication as authjw
 
-
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class StatisticsListView(APIView):
     def get(self, request):

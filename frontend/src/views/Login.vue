@@ -76,23 +76,24 @@ export default {
             }
 
             await axios
-                .post("/auth/login/", formData)
+                .post("/api/auth/login/", formData)
                 .then(response => {
-                    const token = response.data.token
-                    const username = response.data.username
-                    const username_id = response.data.user_id
-                    console.log(response.data)
-                    
-                    this.$store.commit('setToken', token)
-                    
-                    axios.defaults.headers.common["Authorization"] = "Token " + token
-                    localStorage.setItem("username_id", username_id)
-                    localStorage.setItem("username", username)
-                    localStorage.setItem("token", token)
-
-                    const toPath = this.$route.query.to || '/'
-
+                    console.log(response.data);
+                    const token = response.data.token;
+                    const refresh = response.data.refresh_token;
+                    const username = response.data.username;
+                    const username_id = response.data.user_id;       
+                    this.$store.commit('setToken', "Bearer " + token);
+                
+                    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+                    localStorage.setItem("username_id", username_id);
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("refresh_token", refresh);
+                    const toPath = this.$route.query.to || '/HomePage'
+                    console.log(this.$router.push(toPath))
                     this.$router.push(toPath)
+
                 })
                 .catch(error => {
                     if (error.response) {

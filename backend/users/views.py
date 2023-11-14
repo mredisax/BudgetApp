@@ -5,33 +5,59 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework_simplejwt import authentication
 from django.contrib.auth.models import User
-from users.serializers import RegisterSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from users.serializers import  UserSerializer, RegisterSerializer, LoginSerializer
 
-class CustomObtainAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+
+
+#create JWT login class with method post
+
+
+
+@permission_classes([AllowAny])
+class RegistrationView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@authentication_classes([authentication.JWTAuthentication])
+@permission_classes([AllowAny, ])
+class LoginView(APIView):
+    def post(self, request):
+        print(f"----- {request.data}")
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        login(request, user)
-        return Response({
-            'token': token.key,
+        username = serializer.validated_data['username']
+        user = User.objects.get(username=username)
+        if user:
+            print(login(request, user))
+            login(request, user)
+            refresh = RefreshToken.for_user(user)
+            return Response({
             'user_id': user.pk,
-            'username': user.username
-        })
+            'username': user.username,
+            'token': str(refresh.access_token),
+            'refresh_token': str(refresh)
+            })
+        else:
+            return Response({'error': 'Invalid credentials'}, status=400)
 
-class RegisterView(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
 
-@authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication])
+@authentication_classes([authentication.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class LogoutView(APIView):
-
-    def get(self, request):
-        # Perform the logout action, such as invalidating the session or token
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+    def post(self, request):
+        try:
+            logout(request)
+            print(request.data)
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

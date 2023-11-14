@@ -136,14 +136,15 @@ name: 'HomePage',
   },
   created() {
     // Fetch the budget name from the API when the component is created
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Token ${token}`;
-      console.log(axios.defaults.headers.common['Authorization'])
-    } else {
-      // Handle the case where the token is not available
-      console.error('Token not found in sessionStorage');
-    }
+    // const token = localStorage.getItem('token');
+    // console.log(token)
+    // if (token) {
+    //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //   console.log(axios.defaults.headers.common['Authorization'])
+    // } else {
+    //   // Handle the case where the token is not available
+    //   console.error('Token not found in sessionStorage');
+    // }
     this.fetchBudgetName();
     this.fetchStats();
     this.fetchTransactions();
