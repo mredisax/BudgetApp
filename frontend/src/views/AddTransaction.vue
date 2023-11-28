@@ -112,9 +112,11 @@ export default {
       this.showModal = false;
     },
     async addTransaction() {
-      if(this.transactionName == '' || this.amount == '' || this.selectedCategoryId == '' || this.selectedTagIds == ''){
+      if(this.transactionName == '' || this.amount == '' || this.selectedCategoryId == '' ){
+        this.$toast.error('Empty fill', { position: 'top-right' });
         alert('please fill all fields')
       }else{
+        try{
         const response = await axios.post('/api/transactions', {
           budget: 1,
           name: this.transactionName,
@@ -123,13 +125,17 @@ export default {
           category: this.selectedCategoryId,
           tags: this.selectedTagIds,
         });
-        // Add the new transaction to the list of transactions
         this.transactions.push(response.data);
+        this.$toast.success('Post request successful!', { position: 'top-right' });
         // Reset the form
         this.transactionName = '';
         this.amount = '';
         this.selectedCategoryId = '';
         this.selectedTagIds = '';
+        }catch(error){
+        this.$toast.error('Error making POST request', { position: 'top-right' });
+        console.log(error)
+        }
       }
     },
 

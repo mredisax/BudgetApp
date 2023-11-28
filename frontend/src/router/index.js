@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
 import store from '../store'
 import HomePage from '../views/HomePage.vue'
 import LogIn from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
 import AddBudget from '../views/AddTransaction.vue'
 
+
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'HomePage',
     component: HomePage,
     meta: {
@@ -38,6 +38,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  base: '/home',
   routes
 })
 

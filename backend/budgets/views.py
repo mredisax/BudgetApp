@@ -20,6 +20,14 @@ class BudgetDetailView(APIView):
         serializer = BudgetSerializer(budget)
         return Response(serializer.data)
     
+    def put(self, request, budget_id):
+        budget = get_object_or_404(Budget, id=budget_id)
+        serializer = BudgetSerializer(budget, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    
     def post(self, request):
         serializer = BudgetSerializer(data=request.data)
         if serializer.is_valid():

@@ -62,7 +62,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Log In'
+        document.title = 'LogIn'
     },
     methods: {
         async loginUser() {
@@ -90,9 +90,8 @@ export default {
                     localStorage.setItem("username", username);
                     localStorage.setItem("token", token);
                     localStorage.setItem("refresh_token", refresh);
-                    const toPath = this.$route.query.to || '/HomePage'
-                    console.log(this.$router.push(toPath))
-                    this.$router.push(toPath)
+                    console.log(this.$router.push({ name: 'HomePage' }))
+                    this.$router.push({ path: '/home' })
 
                 })
                 .catch(error => {

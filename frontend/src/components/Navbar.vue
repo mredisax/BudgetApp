@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+// import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import axios from 'axios';
 // import { mapState } from 'vuex'
 
@@ -49,15 +49,15 @@ export default {
           this.$store.dispatch('toggleSidebar')
       },
     logout() {
-      const refresh = sessionStorage.getItem('refresh_token');
+      const user = localStorage.getItem('username');
+      console.log(user)
       const formData = {
-                username: refresh,
+                username: user,
             }
-
-
       axios.post('/api/auth/logout/', formData)
         .then(() => {
           // Clear user data (e.g., token or user info)
+          console.log("User data cleared")
           localStorage.removeItem("token")
           localStorage.removeItem("username")
           localStorage.removeItem("refresh_token")

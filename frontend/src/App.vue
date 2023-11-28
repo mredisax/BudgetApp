@@ -1,6 +1,5 @@
 <template>
   <DashBoard />
-  
 </template>
 
 <script>

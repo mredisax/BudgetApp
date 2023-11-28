@@ -33,6 +33,13 @@ class TransactionListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def put(self, request):
+        serializer = TransactionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    
     def delete(self, request, transaction_id):
         transaction = get_object_or_404(Transaction, id=transaction_id)
         transaction.delete()
@@ -62,6 +69,13 @@ class TransactionCategoryView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
     
+    def put(self, request):
+        serializer = TransactionCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    
     def delete(self, request, category_id):
         category = get_object_or_404(TransactionCategory, id=category_id)
         category.delete()
@@ -80,6 +94,13 @@ class TransactionTagView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request):
+        serializer = TransactionTagSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
         return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, tag_id):

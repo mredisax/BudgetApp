@@ -10,11 +10,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers import  UserSerializer, RegisterSerializer, LoginSerializer
 
-
-
 #create JWT login class with method post
-
-
 
 @permission_classes([AllowAny])
 class RegistrationView(APIView):
@@ -52,11 +48,13 @@ class LoginView(APIView):
 @permission_classes([permissions.IsAuthenticated])
 class LogoutView(APIView):
     def post(self, request):
+        print("logout")
         try:
-            logout(request)
-            print(request.data)
-            refresh_token = request.data["refresh_token"]
-            token = RefreshToken(refresh_token)
+            print(request.data['username'])
+            user = User.objects.get(username=request.data['username'])
+            # logout(user)
+        
+            token = RefreshToken.for_user(user)
             token.blacklist()
             return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
