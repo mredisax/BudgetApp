@@ -37,13 +37,10 @@
             <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
           </div>
         </form>
-        <div class="notification is-danger" v-if="errors.length">
-                        <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-                    </div>
         <p class="mt-10 text-center text-sm text-gray-500">
           Not a member?
           {{ ' ' }}
-          <a href="/signup" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
+          <a href="/signup" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register</a>
         </p>
       </div>
     </div>
@@ -58,7 +55,6 @@ export default {
         return {
             username: '',
             password: '',
-            errors: []
         }
     },
     mounted() {
@@ -84,7 +80,7 @@ export default {
                     const username = response.data.username;
                     const username_id = response.data.user_id;       
                     this.$store.commit('setToken', "Bearer " + token);
-                
+                    this.$store.commit('setAuthentication', true);
                     axios.defaults.headers.common["Authorization"] = "Bearer " + token;
                     localStorage.setItem("username_id", username_id);
                     localStorage.setItem("username", username);
@@ -92,15 +88,20 @@ export default {
                     localStorage.setItem("refresh_token", refresh);
                     console.log(this.$router.push({ name: 'HomePage' }))
                     this.$router.push({ path: '/home' })
-
+                    this.$toast.open({
+                        message: "Successfully Logged In",
+                        type: 'success',
+                        position: 'top-right',
+                        duration: 3000
+                    })
                 })
                 .catch(error => {
                     if (error.response) {
                         for (const property in error.response.data) {
-                            this.errors.push(`${property}: ${error.response.data[property]}`)
+                          this.$toast.error(`${property}: ${error.response.data[property]}`, { position: 'top-right' });
                         }
                     } else {
-                        this.errors.push('Something went wrong. Please try again')
+                      this.$toast.error('Something went wrong. Please try again', { position: 'top-right' });
                         
                         console.log(JSON.stringify(error))
                     }

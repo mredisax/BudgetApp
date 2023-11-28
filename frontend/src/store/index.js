@@ -19,6 +19,9 @@ export default new Vuex.Store({
             state.isAuthenticated = false;
         }
     },
+    setAuthentication(state, isAuthenticated) {
+      state.isAuthenticated = isAuthenticated;
+    },
     setUser(state, user) {
       state.user = user;
     },

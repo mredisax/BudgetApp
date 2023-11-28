@@ -56,7 +56,6 @@ class TransactionDetailView(APIView):
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionCategoryView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
     def get(self, request):
         categories = TransactionCategory.objects.all()
         serializer = TransactionCategorySerializer(categories, many=True)

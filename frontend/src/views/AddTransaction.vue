@@ -20,9 +20,9 @@
             </div>
           </div>
           <div class="sm:col-span-1">
-            <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Category</label>
+            <label for="category" class="block text-sm font-medium leading-6 text-gray-900">Category</label>
             <div class="mt-2">
-              <select v-model="selectedCategoryId"  id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+              <select v-model="selectedCategoryId"  id="category" name="category" autocomplete="category-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
                 <option value="">Select a category</option>
                 <option v-for="(categoryName, categoryId) in categories" :key="categoryId" :value="categoryId">{{ categoryName }}</option>
               </select>
@@ -30,9 +30,9 @@
           </div>
           
           <div class="sm:col-span-1">
-            <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
+            <label for="tag" class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
             <div class="mt-2">
-              <select v-model="selectedTagIds" multiple id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+              <select v-model="selectedTagIds" multiple id="tag" name="tag" autocomplete="tag-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
                 <option v-for="(tag, id) in tags" :key="id" :value="id">{{ tag }}</option>
               </select>
             </div>
@@ -56,15 +56,17 @@
     <div class="modal-overlay"></div>
     <div class="modal-container bg-white w-96 mx-auto p-6 rounded shadow-lg">
       <h2 class="text-2xl font-semibold mb-4">Add Tag or Category</h2>
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="addOption" method="POST">
         <!-- Add your form fields here -->
         <div class="mb-4">
           <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-          <input v-model="formData.name" type="text" id="name" name="name" class="w-full border rounded py-2 px-3">
+          <input v-model="optionName" type="text" id="name" name="name" class="w-full border rounded py-2 px-3">
         </div>
         <div class="mb-4">
-          <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-          <textarea v-model="formData.description" id="description" name="description" class="w-full border rounded py-2 px-3"></textarea>
+          <select v-model="selectedAdd"  id="add" name="add" autocomplete="add-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1">
+                <option value="category">category</option>
+                <option value="tag">tag</option>
+              </select>
         </div>
         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit</button>
       </form>
@@ -84,14 +86,12 @@ export default {
   data() {
     return {
       showModal: false,
-      formData: {
-        name: '',
-        // Add more form fields here
-      },
       transactionName: '',
+      optionName: '',
       amount: '',
       selectedCategoryId: '',
       selectedTagIds: '',
+      selectedAdd: '',
       transactions: [],
       tags: {},
       categories: {},
@@ -111,10 +111,33 @@ export default {
     closeModal() {
       this.showModal = false;
     },
-    async addTransaction() {
-      if(this.transactionName == '' || this.amount == '' || this.selectedCategoryId == '' ){
+
+    
+    async addOption(){
+      if(this.optionName == '' || this.selectedAdd == '' ){
         this.$toast.error('Empty fill', { position: 'top-right' });
-        alert('please fill all fields')
+      }else{
+        try{
+        console.log(this.optionName, this.selectedAdd)
+        const endpoint = this.selectedAdd === 'category' ? '/api/categories' : '/api/tags';
+        const response = await axios.post(endpoint, {
+          name: this.optionName,
+        });
+        console.log(response.data);
+        this.$toast.success('Post request successful!', { position: 'top-right' });
+        this.optionName = '';
+        this.selectedAdd = '';
+        this.closeModal();
+        }catch(error){
+          // this.$toast.error('Error making POST request', { position: 'top-right' });
+          console.log(error)
+        }
+      }
+    },
+
+    async addTransaction() {
+      if(this.transactionName == '' || this.amount == '' || this.selectedCategoryId == '' || this.selectedTagIds == '' ){
+        this.$toast.error('Empty fill', { position: 'top-right' });
       }else{
         try{
         const response = await axios.post('/api/transactions', {
@@ -173,7 +196,7 @@ export default {
         }).then((response) => {
           this.tags = response.data.reduce((map, tag) => {
             map[tag.id] = tag.name;
-            console.log(map)
+            // console.log(map)
             return map;
           }, {});
         })

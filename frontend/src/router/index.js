@@ -4,13 +4,21 @@ import HomePage from '../views/HomePage.vue'
 import LogIn from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
 import AddBudget from '../views/AddTransaction.vue'
-
+import ChartPage from '../views/ChartPage.vue'
 
 const routes = [
   {
     path: '/home',
     name: 'HomePage',
     component: HomePage,
+    meta: {
+      requireLogin: true
+  }
+  },
+  {
+    path: '/chart',
+    name: 'ChartPage',
+    component: ChartPage,
     meta: {
       requireLogin: true
   }
