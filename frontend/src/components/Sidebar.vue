@@ -42,7 +42,7 @@
 </template>
 
 
-// import { mapState } from 'vuex'
+
   <script>
   
   export default {

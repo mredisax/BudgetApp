@@ -16,8 +16,9 @@ from .serializers import (
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionListView(APIView):
-    def get(self, request):
-        transactions = Transaction.objects.filter(account__owner=request.user).prefetch_related('tags')
+    def get(self, request, budget_id):
+        print(budget_id)
+        transactions = Transaction.objects.filter(account__owner=request.user, budget=budget_id).prefetch_related('tags')
         serializer = TransactionSerializer(
             transactions,
             many=True
@@ -27,7 +28,6 @@ class TransactionListView(APIView):
     def post(self, request):
         serializer = TransactionSerializer(data=request.data)
         print(request.data)
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -48,10 +48,13 @@ class TransactionListView(APIView):
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class TransactionDetailView(APIView):
-    def get(self, request, pk):
-        transaction = get_object_or_404(Transaction, pk=pk)
+    def get(self, request, budget_id, pk):
+        transaction = get_object_or_404(Transaction, pk=pk, budget=budget_id)
         serializer = TransactionSerializer(transaction)
         return Response(serializer.data)
+    
+    def post(self, request, budget_id, pk):
+        pass
     
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])

@@ -18,10 +18,10 @@
 
       <div>
         <div class="flex items-center justify-between">
-          <label for="password1" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+          <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
         </div>
         <div class="mt-2">
-          <input v-model="password1" id="password1" name="password1" type="password1" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
         </div>
       </div>
 
@@ -30,7 +30,7 @@
           <label for="password2" class="block text-sm font-medium leading-6 text-gray-900">Password Repeat</label>
         </div>
         <div class="mt-2">
-          <input v-model="password2" id="password2" name="password2" type="password2" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <input v-model="password2" id="password2" name="password2" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
         </div>
       </div>
       <div class="notification is-danger" v-if="errors.length">
@@ -53,7 +53,7 @@ export default {
     data() {
         return {
             username: '',
-            password1: '',
+            password: '',
             password2: '',
             errors: []
         }
@@ -66,23 +66,23 @@ export default {
                 this.errors.push('The username is missing')
             }
 
-            if (this.password1 === '') {
+            if (this.password === '') {
                 this.errors.push('The password is too short')
             }
 
-            if (this.password1 !== this.password2) {
+            if (this.password !== this.password2) {
                 this.errors.push('The passwords doesn\'t match')
             }
 
             if (!this.errors.length) {
                 const formData = {
                     username: this.username,
-                    password1: this.password1,
+                    password: this.password,
                     password2: this.password2
                 }
 
                 axios
-                    .post("/auth/register/", formData)
+                    .post("/api/auth/register/", formData)
                     .then(response => {
                         // toast({
                         //     message: 'Account created, please log in!',

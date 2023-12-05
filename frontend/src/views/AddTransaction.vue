@@ -196,7 +196,6 @@ export default {
         }).then((response) => {
           this.tags = response.data.reduce((map, tag) => {
             map[tag.id] = tag.name;
-            // console.log(map)
             return map;
           }, {});
         })

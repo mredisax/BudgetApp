@@ -94,10 +94,12 @@
               {{ transaction.name }}
             </th>
             <td class="px-6 py-4">
-              {{ getCategoryName(transaction.category)}}
+              <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">{{ getCategoryName(transaction.category)}}</span>
             </td>
             <td class="px-6 py-4">
-              {{ transaction.tags }}
+              <span v-for="tagId in transaction.tags" :key="tagId">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{ getTagName(tagId) }}</span>
+            </span>
             </td>
             <td class="px-6 py-4">
               {{ transaction.amount }}
@@ -120,6 +122,7 @@
 
 <script>
 // import { Chart } from 'chart.js/auto';
+import { thisExpression } from '@babel/types';
 import axios from 'axios';
 
 export default {
@@ -129,9 +132,11 @@ name: 'HomePage',
       budgetName: 'Default', // Initialize budgetName with a default value
       totalAmount: 0,
       monthlyAmounts: 0,
+      budgetId: 1,
       totalDailyAmounts: 0,
       transactions: [],
       categories: {},
+      tags: {},
     };
   },
   created() {
@@ -149,11 +154,12 @@ name: 'HomePage',
     this.fetchStats();
     this.fetchTransactions();
     this.fetchCategories();
+    this.fetchTags();
   },
   methods: {
     fetchBudgetName() {
       // Define the API endpoint URL
-      const apiUrl = '/api/budget/1'; // Update the URL as needed
+      const apiUrl = '/api/budget/' + this.budgetId; // Update the URL as needed
 
       // Use Axios to make the GET request
       axios.get(apiUrl,
@@ -187,7 +193,7 @@ name: 'HomePage',
     },
     fetchTransactions() {
       // Make an Axios GET request to the API endpoint
-      axios.get('/api/transactions',
+      axios.get('/api/transactions/' + this.budgetId,
         { headers: 
           { 'Authorization': axios.defaults.headers.common['Authorization'] } 
         }).then((response) => {
@@ -212,94 +218,31 @@ name: 'HomePage',
           console.error('Error fetching categories:', error);
         });
     },
+    fetchTags(){
+      axios.get('/api/tags',
+        { headers: 
+          { 'Authorization': axios.defaults.headers.common['Authorization'] } 
+        }).then((response) => {
+          this.tags = response.data.reduce((map, tag) => {
+            map[tag.id] = tag.name;
+            return map;
+          }, {});
+        })
+        .catch((error) => {
+          console.error('Error fetching tags:', error);
+        });
+    },
     getCategoryName(categoryId) {
       // Resolve the category ID to its name using the categories map
       return this.categories[categoryId] || '';
     },
+    getTagName(tagId) {
+      // Resolve the category ID to its name using the categories map
+      console.log(tagId)
+      return this.tags[tagId] || '';
+    },
   },
 };
 
-        
-
-            // buyersData: {
-            //     type: 'line',
-            //     data: {
-            //         labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-            //         datasets:[{
-            //             backgroundColor : "rgba(99,179,237,0.4)",
-            //             strokeColor : "#63b3ed",
-            //             pointColor : "#fff",
-            //             pointStrokeColor : "#63b3ed",
-            //             data : [203,156,99,251,305,247,256]
-            //         },
-            //         {
-            //             backgroundColor : "rgba(198,198,198,0.4)",
-            //             strokeColor : "#f7fafc",
-            //             pointColor : "#fff",
-            //             pointStrokeColor : "#f7fafc",
-            //             data : [86,97,144,114,94,108,156]
-            //         }]
-            //     },
-            //     options: {
-            //         legend: {
-            //             display: false
-            //         },
-            //         scales: {
-            //             yAxes: [{
-            //                 gridLines: {
-            //                     display:false
-            //                 },  
-            //                 ticks: {
-            //                     display: false
-            //                 }
-            //             }],
-            //             xAxes: [{
-            //                 gridLines: {
-            //                     display: false
-            //                 }
-            //             }]
-            //         }
-            //     }
-            // },
-            // reviewsData: {
-            //     type: 'bar',
-            //     data: {
-            //         labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-            //         datasets:[{
-            //             backgroundColor : "rgba(99,179,237,0.4)",
-            //             strokeColor : "#63b3ed",
-            //             pointColor : "#fff",
-            //             pointStrokeColor : "#63b3ed",
-            //             data : [203,156,99,251,305,247,256]
-            //         }]
-            //     },
-            //     options: {
-            //         legend: {
-            //             display: false
-            //         },
-            //         scales: {
-            //             yAxes: [{
-            //                 gridLines: {
-            //                     display:false
-            //                 },  
-            //                 ticks: {
-            //                     display: false
-            //                 }
-            //             }],
-            //             xAxes: [{
-            //                 gridLines: {
-            //                     display: false
-            //                 }
-            //             }]
-            //         }
-            //     }
-
-            // },
-        // }
-    // },
-//     mounted () {
-//         new Chart(document.getElementById('buyers-chart'), this.buyersData)
-//         // new Chart(document.getElementById('reviews-chart'), this.reviewsData)
-//     }
 // }
 </script>
