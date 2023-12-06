@@ -1,17 +1,6 @@
 from datetime import date
 from collections import defaultdict
-# Singleton decorator
-def singleton(class_):
-    instances = {}
 
-    def wrapper(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-
-    return wrapper
-
-@singleton
 class Statistics:
     def __init__(self, transactions):
         self.transactions = transactions
@@ -19,7 +8,7 @@ class Statistics:
 
     def calculate_total_amount(self):
         total_amount = sum(transaction.amount for transaction in self.transactions)
-        return total_amount
+        return total_amount or 0.0
 
     def calculate_monthly_amounts(self):
         monthly_amounts = 0

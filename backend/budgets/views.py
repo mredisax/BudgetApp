@@ -13,8 +13,31 @@ from .serializers import BudgetSerializer
 
 @authentication_classes([authentication.TokenAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
+class BudgetListView(APIView):
+    #return all budgets for specify user
+    def get(self, request):
+        budget = Budget.objects.all()
+        serializer = BudgetSerializer(
+            budget,
+            many=True
+        )
+        return Response(serializer.data)
+
+
+@authentication_classes([authentication.TokenAuthentication, authjw.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+class BudgetCreateView(APIView):
+    def post(self, request):
+        serializer = BudgetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+
+
+@authentication_classes([authentication.TokenAuthentication, authjw.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 class BudgetDetailView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, budget_id):
         budget = get_object_or_404(Budget, id=budget_id)
         serializer = BudgetSerializer(budget)
@@ -26,13 +49,6 @@ class BudgetDetailView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
-    
-    def post(self, request):
-        serializer = BudgetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, budget_id):

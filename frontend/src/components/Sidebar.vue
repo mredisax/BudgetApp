@@ -41,11 +41,33 @@
         </div>
 </template>
 
-
-
   <script>
+
+
+export default {
+  name: 'SideBar',
+  computed: {
+    openSidebar() {
+      // Access the openSidebar variable from the Vuex store
+      console.log("f" + this.$store.state.openSidebar); 
+      return this.$store.state.openSidebar;
+    },
+  },
+};
   
-  export default {
-    name: 'BrandSidebar',
-  };
+// export default {
+//     name: 'SideBar',
+//     data() {
+//       return {
+//         sideBarOpen: true
+//       }
+//     },
+//     computed: {
+//     openSidebar() {
+//       console.log("f" + this.$store.state.openSidebar); 
+//       this.sideBarOpen = this.$store.state.openSidebar;
+//       // return this.$store.state.openSidebar;
+//     },
+//   },
+//   };
   </script>

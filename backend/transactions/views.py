@@ -17,7 +17,6 @@ from .serializers import (
 @permission_classes([permissions.IsAuthenticated])
 class TransactionListView(APIView):
     def get(self, request, budget_id):
-        print(budget_id)
         transactions = Transaction.objects.filter(account__owner=request.user, budget=budget_id).prefetch_related('tags')
         serializer = TransactionSerializer(
             transactions,
@@ -26,24 +25,24 @@ class TransactionListView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = TransactionSerializer(data=request.data)
         print(request.data)
+        serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request):
-        serializer = TransactionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    # def put(self, request):
+    #     serializer = TransactionSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, transaction_id):
-        transaction = get_object_or_404(Transaction, id=transaction_id)
-        transaction.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # def delete(self, request, transaction_id):
+    #     transaction = get_object_or_404(Transaction, id=transaction_id)
+    #     transaction.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
     
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -53,8 +52,20 @@ class TransactionDetailView(APIView):
         serializer = TransactionSerializer(transaction)
         return Response(serializer.data)
     
-    def post(self, request, budget_id, pk):
-        pass
+    def put(self, request, budget_id, pk):
+        transaction = get_object_or_404(Transaction, pk=pk, budget=budget_id)
+        print(f"TRAN: {transaction}")
+        print(request.data)
+        serializer = TransactionSerializer(transaction, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, budget_id, pk):
+        transaction = get_object_or_404(Transaction, pk=pk, budget=budget_id)
+        transaction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])

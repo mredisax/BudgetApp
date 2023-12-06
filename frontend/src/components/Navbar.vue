@@ -1,9 +1,27 @@
 <template>
+<Sidebar />
 <div class="sticky top-0 z-40">
           <div class="w-full h-20 px-6 bg-gray-100 border-b flex items-center justify-between">
 
               <!-- left navbar -->
               <div class="flex">
+                <button @click="toggleSidebar" class="lg:hidden text-blue-500">
+                  {{ sideBarOpen }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25"
+            />
+          </svg>
+        </button>
               </div>
 
             <!-- right navbar -->
@@ -26,16 +44,18 @@
 <script>
 // import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import axios from 'axios';
+import Sidebar from './Sidebar'
 // import { mapState } from 'vuex'
 
 export default {
   name: 'NavBar',
-  // computed: {
-  //     ...mapState(['sideBarOpen'])
-  // },
+  components: {
+    Sidebar,
+    },
   data() {
       return {
           dropDownOpen: false,
+          sideBarOpen: true,
           username: 'None'
       }
   },
@@ -43,9 +63,11 @@ export default {
       this.username = localStorage.getItem('username')
   },
   methods: {
-      toggleSidebar() {
-          this.$store.dispatch('toggleSidebar')
-      },
+    toggleSidebar() {
+      // Update the openSidebar variable in the Vuex store
+      console.log("Toggle" + this.$store.state.openSidebar);
+      this.$store.commit('setOpenSidebar', !this.$store.state.openSidebar);
+    },
     logout() {
       const user = localStorage.getItem('username');
       console.log(user)

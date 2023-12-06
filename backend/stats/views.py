@@ -11,9 +11,11 @@ from rest_framework_simplejwt import authentication as authjw
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication, authentication.BasicAuthentication, authjw.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 class StatisticsListView(APIView):
-    def get(self, request):
-        transactions = Transaction.objects.filter(account__owner=request.user).prefetch_related('tags')
+    def get(self, request, budget_id):
+        transactions = Transaction.objects.filter(account__owner=request.user, budget=budget_id).prefetch_related('tags')
+        print(f"T: {transactions}")
         statistics = Statistics(transactions)
+        print(statistics.to_dict())
         serialized_statistics = StatisticsSerializer(statistics.to_dict())
 
         return Response(serialized_statistics.data)

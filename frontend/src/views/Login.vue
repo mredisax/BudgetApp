@@ -74,7 +74,7 @@ export default {
             await axios
                 .post("/api/auth/login/", formData)
                 .then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     const token = response.data.token;
                     const refresh = response.data.refresh_token;
                     const username = response.data.username;

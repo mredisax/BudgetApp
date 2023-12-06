@@ -19,6 +19,18 @@
               <input v-model="amount" type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
           </div>
+
+                <div class="sm:col-span-1">
+            <label for="category" class="block text-sm font-medium leading-6 text-gray-900">Budget</label>
+            <div class="mt-2">
+              <select v-model="selectedBudget"  id="budget" name="budget" autocomplete="budget-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                <option value="">Select a budget</option>
+                <option  v-for="budget in budgets" :key="budget.id" :value="budget.id">{{ budget.name }}</option>
+              </select>
+            </div>
+          </div>
+                
+
           <div class="sm:col-span-1">
             <label for="category" class="block text-sm font-medium leading-6 text-gray-900">Category</label>
             <div class="mt-2">
@@ -89,6 +101,8 @@ export default {
       transactionName: '',
       optionName: '',
       amount: '',
+      budgets: null,
+      selectedBudget: null,
       selectedCategoryId: '',
       selectedTagIds: '',
       selectedAdd: '',
@@ -99,11 +113,24 @@ export default {
   },
   created() {
     // this.fetchBudgetName();
-    this.fetchTransactions();
+    // this.fetchTransactions();
     this.fetchCategories();
     this.fetchTags();
     this.username_id = localStorage.getItem('username_id')
   },
+  beforeCreate() {
+    this.$store.dispatch('fetchBudgets').then(() => {
+      this.budgets = this.$store.getters.getBudgets;
+      this.selectedBudget = this.budgets[0].id;
+    });
+  },
+  watch: {
+    selectedBudget(newBudgetId, oldBudgetId) {
+    if (newBudgetId !== oldBudgetId) {
+      // this.fetchTransactions();
+    }
+  },
+},
   methods: {
     openModal() {
       this.showModal = true;
@@ -111,8 +138,6 @@ export default {
     closeModal() {
       this.showModal = false;
     },
-
-    
     async addOption(){
       if(this.optionName == '' || this.selectedAdd == '' ){
         this.$toast.error('Empty fill', { position: 'top-right' });
@@ -128,6 +153,8 @@ export default {
         this.optionName = '';
         this.selectedAdd = '';
         this.closeModal();
+        this.fetchCategories();
+        this.fetchTags();
         }catch(error){
           // this.$toast.error('Error making POST request', { position: 'top-right' });
           console.log(error)
@@ -141,7 +168,7 @@ export default {
       }else{
         try{
         const response = await axios.post('/api/transactions', {
-          budget: 1,
+          budget: this.selectedBudget,
           name: this.transactionName,
           amount: this.amount,
           account: this.username_id,
@@ -162,18 +189,18 @@ export default {
       }
     },
 
-    fetchTransactions() {
-      // Make an Axios GET request to the API endpoint
-      axios.get('/api/transactions',
-        { headers: 
-          { 'Authorization': axios.defaults.headers.common['Authorization'] } 
-        }).then((response) => {
-          this.transactions = response.data;
-        })
-        .catch((error) => {
-          console.error('Error fetching transactions:', error);
-        });
-    },
+    // fetchTransactions() {
+    //   // Make an Axios GET request to the API endpoint
+    //   axios.get('/api/transactions/' + this.budgetId,
+    //     { headers: 
+    //       { 'Authorization': axios.defaults.headers.common['Authorization'] } 
+    //     }).then((response) => {
+    //       this.transactions = response.data;
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error fetching transactions:', error);
+    //     });
+    // },
     fetchCategories(){
       axios.get('/api/categories',
         { headers: 
