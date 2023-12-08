@@ -61,14 +61,6 @@
     },
     mounted(){
     },
-    // watch: {
-    //   selectedBudget(newBudgetId, oldBudgetId) {
-    //     if (newBudgetId !== oldBudgetId) {
-    //       this.fetchTransactions();
-    //       this.fetchStats();
-    //     }
-    //   },
-    // },
     methods: {
     openBudgetAdd(){
       this.showAddBudget = true;

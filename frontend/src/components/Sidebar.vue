@@ -1,7 +1,7 @@
 <template>
     <!-- give the sidebar z-50 class so its higher than the navbar if you want to see the logo -->
     <!-- you will need to add a little "X" button next to the logo in order to close it though -->
-    <div class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r z-30" :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
+    <div class="sidebar w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r z-30" :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
 
           <div class="w-full h-20 border-b flex px-4 items-center mb-8">
             <p class="font-semibold text-3xl text-blue-400 pl-4"><a href="/home">BudgetApp</a></p>
@@ -25,49 +25,63 @@
               <span class="text-gray-700">AddTransaction</span>
             </div>
           </a>
+          <a href="/chart">
             <div class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
               <svg class="h-6 w-6 fill-current mr-2" viewBox="0 0 20 20">
                 <path d="M17.283,5.549h-5.26V4.335c0-0.222-0.183-0.404-0.404-0.404H8.381c-0.222,0-0.404,0.182-0.404,0.404v1.214h-5.26c-0.223,0-0.405,0.182-0.405,0.405v9.71c0,0.223,0.182,0.405,0.405,0.405h14.566c0.223,0,0.404-0.183,0.404-0.405v-9.71C17.688,5.731,17.506,5.549,17.283,5.549 M8.786,4.74h2.428v0.809H8.786V4.74z M16.879,15.26H3.122v-4.046h5.665v1.201c0,0.223,0.182,0.404,0.405,0.404h1.618c0.222,0,0.405-0.182,0.405-0.404v-1.201h5.665V15.26z M9.595,9.583h0.81v2.428h-0.81V9.583zM16.879,10.405h-5.665V9.19c0-0.222-0.183-0.405-0.405-0.405H9.191c-0.223,0-0.405,0.183-0.405,0.405v1.215H3.122V6.358h13.757V10.405z"></path>
               </svg>
               <span class="text-gray-700">Chart</span>
             </div>
-            <div class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
-              <svg class="h-6 w-6 fill-current mr-2" viewBox="0 0 20 20">
-                <path d="M16.557,4.467h-1.64v-0.82c0-0.225-0.183-0.41-0.409-0.41c-0.226,0-0.41,0.185-0.41,0.41v0.82H5.901v-0.82c0-0.225-0.185-0.41-0.41-0.41c-0.226,0-0.41,0.185-0.41,0.41v0.82H3.442c-0.904,0-1.64,0.735-1.64,1.639v9.017c0,0.904,0.736,1.64,1.64,1.64h13.114c0.904,0,1.64-0.735,1.64-1.64V6.106C18.196,5.203,17.461,4.467,16.557,4.467 M17.377,15.123c0,0.453-0.366,0.819-0.82,0.819H3.442c-0.453,0-0.82-0.366-0.82-0.819V8.976h14.754V15.123z M17.377,8.156H2.623V6.106c0-0.453,0.367-0.82,0.82-0.82h1.639v1.23c0,0.225,0.184,0.41,0.41,0.41c0.225,0,0.41-0.185,0.41-0.41v-1.23h8.196v1.23c0,0.225,0.185,0.41,0.41,0.41c0.227,0,0.409-0.185,0.409-0.41v-1.23h1.64c0.454,0,0.82,0.367,0.82,0.82V8.156z"></path>
-              </svg>
-              <span class="text-gray-700">Calender</span>
-            </div>
+          </a>
           </div>
         </div>
 </template>
 
-  <script>
-
+<script>
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SideBar',
   computed: {
-    openSidebar() {
-      // Access the openSidebar variable from the Vuex store
-      console.log("f" + this.$store.state.openSidebar); 
-      return this.$store.state.openSidebar;
+      ...mapGetters(['getStatusSidebar']),
     },
+    data() {
+      return {
+          sideBarOpen: false,
+      }
   },
+  watch: {
+      getStatusSidebar(newStatus, oldStatus) {
+        if (newStatus !== oldStatus) {
+          this.sideBarOpen = newStatus;
+        }
+      },
+    },
+
 };
-  
-// export default {
-//     name: 'SideBar',
-//     data() {
-//       return {
-//         sideBarOpen: true
-//       }
-//     },
-//     computed: {
-//     openSidebar() {
-//       console.log("f" + this.$store.state.openSidebar); 
-//       this.sideBarOpen = this.$store.state.openSidebar;
-//       // return this.$store.state.openSidebar;
-//     },
-//   },
-//   };
-  </script>
+</script>
+<style>
+@-webkit-keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+  }
+}
+@keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+  }
+}
+.sidebar {
+	animation: slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+</style>

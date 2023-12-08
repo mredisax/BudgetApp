@@ -73,6 +73,7 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getStatusSidebar: (state) => state.openSidebar,
     getBudgetId: (state) => state.selectedBudgetId,
     getBudgets: (state) => state.budgets,
     isLoggedIn(state) {

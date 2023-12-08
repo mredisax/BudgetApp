@@ -1,26 +1,56 @@
 <template>
+    <BudgetPage />
     <div>
       <canvas ref="chartCanvas"></canvas>
     </div>
   </template>
   
-  <script>
+<script>
 import axios from 'axios';
 import Chart from 'chart.js/auto';
+import BudgetPage from '../components/Budget.vue';
+import { mapGetters } from 'vuex';
 
 export default {
+  name: 'ChartComponent',
+  components: {
+    BudgetPage,
+  },
+  computed: {
+      ...mapGetters(['getBudgetId']),
+    },
+    watch: {
+      getBudgetId(newBudgetId, oldBudgetId) {
+        if (newBudgetId !== oldBudgetId) {
+          this.selectedBudget = newBudgetId;
+          this.fetchChartData();
+        }
+      },
+    },
   data() {
     return {
       chartData: null,
+      chartInstance: null,
+      budgets: null,
+      selectedBudget: null,
     };
   },
-  mounted() {
-    this.fetchChartData();
+  created() {
+        try{
+        this.$store.dispatch('fetchBudgets').then(() => {
+        this.budgets = this.$store.getters.getBudgets;
+        this.selectedBudget = this.budgets[0].id;
+        console.log(this.selectedBudget)
+      });
+    }
+    catch (e) { 
+      console.log(e);
+    }
   },
   methods: {
     async fetchChartData() {
       try {
-        const response = await axios.get('/api/transactions');
+        const response = await axios.get('/api/transactions/' + this.selectedBudget);
         this.chartData = response.data;
         console.log(response.data)
         console.log(this.chartData[0].amount)
@@ -31,6 +61,9 @@ export default {
       }
     },
     renderChart() {
+      if (this.chartInstance) {
+        this.chartInstance.destroy();
+      }
       // Check if chartData is available
       if (!this.chartData) {
         return;
@@ -43,7 +76,7 @@ export default {
       const values = this.chartData.map(item => item.amount);
       console.log(labels)
       // Use Chart.js to create a chart
-      new Chart(ctx, {
+      this.chartInstance = new Chart(ctx, {
         type: 'line', // Choose the chart type (bar, line, pie, etc.)
         data: {
           labels: labels,

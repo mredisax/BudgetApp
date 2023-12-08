@@ -6,7 +6,6 @@
               <!-- left navbar -->
               <div class="flex">
                 <button @click="toggleSidebar" class="lg:hidden text-blue-500">
-                  {{ sideBarOpen }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -29,15 +28,13 @@
               <!--<img src="https://a7sas.net/wp-content/uploads/2019/07/4060.jpeg" class="w-12 h-12 rounded-full shadow-lg" @click="dropDownOpen = !dropDownOpen"> -->
               <p class="text-sm font-semibold leading-6 text-gray-900" @click="dropDownOpen = !dropDownOpen">{{ username}}</p>
             </div>
-
           </div>
 
           <!-- dropdown menu -->
-          <div class="absolute bg-gray-100 border border-t-0 shadow-xl text-gray-700 rounded-b-lg w-48 bottom-10 right-0 mr-6" :class="dropDownOpen ? '' : 'hidden'">
+          <div class="absolute bg-gray-100 border border-t-0 shadow-xl text-gray-700 rounded-b-lg w-30 bottom-30 right-0 mr-6" :class="dropDownOpen ? '' : 'hidden'">
               <button @click="logout" class="block px-4 py-2 hover:bg-gray-200">Logout</button>
           </div>
           <!-- dropdown menu end -->
-
   </div>
 </template>
 
