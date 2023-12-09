@@ -8,7 +8,7 @@ import ChartPage from '../views/ChartPage.vue'
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'HomePage',
     component: HomePage,
     meta: {
@@ -46,7 +46,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  base: '/home',
+  base: '/',
   routes
 })
 

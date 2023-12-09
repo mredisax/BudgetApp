@@ -10,7 +10,7 @@ RUN yarn install
 
 COPY . .
 
-CMD [ "yarn", "serve" ]
+CMD [ "yarn", "serve", "--http true" ]
 
 # # Użyj oficjalnego obrazu Node.js jako bazowego obrazu
 # FROM node:16-alpine

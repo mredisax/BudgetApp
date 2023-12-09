@@ -25,9 +25,17 @@ SECRET_KEY = 'django-insecure-@+a8p_h_5@)m6vtqdfpou0=2$cix5!1cx-b3gk(v4uu7^!wxw#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'backend.budget.qqbit.pl',
+]
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
+    'https://budget.qqbit.pl',
+    'https://backend.budget.qqbit.pl',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://backend.budget.qqbit.pl',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
