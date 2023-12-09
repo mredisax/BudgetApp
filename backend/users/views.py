@@ -7,6 +7,9 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt import authentication
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from users.models import Account
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers import  UserSerializer, RegisterSerializer, LoginSerializer
 
@@ -59,3 +62,8 @@ class LogoutView(APIView):
             return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@receiver(post_save, sender=User)
+def create_account(sender, instance, created, **kwargs):
+    if created:
+        Account.objects.create(owner=instance, name=f"{instance.username}")
