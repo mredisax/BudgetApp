@@ -18,8 +18,8 @@
       <h2 class="text-2xl font-semibold mb-4">Add budget</h2>
         <label for="addBudget" class="block text-gray-700 text-sm font-bold mb-2">Budget Name:</label>
         <input v-model="budgetName" type="text" id="addBudget" name="addBudget" class="w-full border rounded py-2 px-3">
-        <button @click="budgetAdd" class="bg-green-500 text-white py-2 px-4 rounded">Add</button>
-        <button @click="closeBudgetAdd" class="bg-blue-500 text-white py-2 px-4 rounded">Close</button>
+        <button @click="closeBudgetAdd" class="bg-blue-500 m-1 text-white py-2 px-4 rounded">Close</button>
+        <button @click="budgetAdd" class="bg-green-500 m-1 text-white py-2 px-4 rounded">Add</button>
     </div>
   </div>
 </template>
