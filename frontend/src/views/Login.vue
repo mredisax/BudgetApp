@@ -87,7 +87,7 @@ export default {
                     localStorage.setItem("token", token);
                     localStorage.setItem("refresh_token", refresh);
                     console.log(this.$router.push({ name: 'HomePage' }))
-                    this.$router.push({ path: '/home' })
+                    this.$router.push({ path: '/' })
                     this.$toast.open({
                         message: "Successfully Logged In",
                         type: 'success',
