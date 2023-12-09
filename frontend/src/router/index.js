@@ -8,7 +8,7 @@ import ChartPage from '../views/ChartPage.vue'
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'HomePage',
     component: HomePage,
     meta: {
