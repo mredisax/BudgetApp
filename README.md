@@ -25,7 +25,7 @@ Aby uruchomić aplikację BudgetApp, musisz mieć zainstalowane następujące op
 
 ## Wygląd
 Logowanie:
-![image info](./assets/img/prev/login.png)
+![image info](./assets/img/login.png)
 
 Rejestracja:
 ![image info](./assets/img/singup.png)
