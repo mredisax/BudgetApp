@@ -5,7 +5,8 @@ import axios from 'axios';
 export default new Vuex.Store({
   state: {
     user: null,
-    token: null,
+    token: localStorage.getItem('token') || null,
+    refreshToken: localStorage.getItem('refresh_token') || null,
     budgetId: null,
     isAuthenticated: false,
     openSidebar: false,
@@ -16,6 +17,7 @@ export default new Vuex.Store({
         if (localStorage.getItem("token")) {
             state.token = localStorage.getItem("token");
             state.user = localStorage.getItem("username");
+            state.refreshToken = localStorage.getItem("refresh_token");
             state.budget = [],
             state.isAuthenticated = true;
         } else {
@@ -33,9 +35,9 @@ export default new Vuex.Store({
     setToken(state, token) {
       state.token = token;
     },
-    // setBudgetId(state, budgetId) {
-    //   state.budgetId = budgetId; 
-    // },
+    setRefreshToken(state, refreshToken) {
+      state.refreshToken = refreshToken;
+    },
     setBudgets(state, budgets) {
       state.budgets = budgets;
     },
@@ -54,14 +56,20 @@ export default new Vuex.Store({
         console.error('Error fetching global variable:', error);
       }
     },
-    // async fetchBugdetId({ commit }) {
-    //   try {
-    //     const response = await axios.get('/api/budget/1');
-    //     commit('setBudgetId', response.data.id);
-    //   } catch (error) {
-    //     console.error('Error fetching global variable:', error);
-    //   }
-    // },
+    async refreshTokens({ commit, state }) {
+        try {
+          const response = await axios.post('/api/auth/token/refresh/', {
+            refresh: state.refreshToken,
+          });
+          const newToken = response.data.access;
+          commit('setToken', newToken);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+          return newToken;
+        } catch (error) {
+            console.error('Token refresh failed:', error);
+            throw error;
+        }
+      },
     async fetchBudgets({ commit }) {
       await axios.get('/api/budgets').then((response) => {
           console.log(response.data)

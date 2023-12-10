@@ -226,7 +226,7 @@
               'Authorization': axios.defaults.headers.common['Authorization']
             }
           }).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             this.transactions = response.data;
           })
           .catch((error) => {
@@ -269,7 +269,7 @@
       },
       getTagName(tagId) {
         // Resolve the category ID to its name using the categories map
-        console.log(tagId)
+        // console.log(tagId)
         return this.tags[tagId] || '';
       },
     },

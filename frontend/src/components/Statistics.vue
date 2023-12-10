@@ -75,7 +75,7 @@ import { mapGetters } from 'vuex';
         // Use Axios to make the GET request
         axios.get('/api/stats/' + this.budgets).then((response) => {
             // this.stats = response.data;
-            console.log(response.data)
+            // console.log(response.data)
             this.totalAmount = response.data.total_amount;
             this.monthlyAmounts = response.data.monthly_amounts
             this.totalDailyAmounts = response.data.daily_amounts
