@@ -63,14 +63,11 @@ export default {
     methods: {
         async loginUser() {
             axios.defaults.headers.common["Authorization"] = ""
-
             localStorage.removeItem("token")
-
             const formData = {
                 username: this.username,
                 password: this.password
             }
-
             await axios
                 .post("/api/auth/login/", formData)
                 .then(response => {
@@ -79,7 +76,7 @@ export default {
                     const refresh = response.data.refresh_token;
                     const username = response.data.username;
                     const username_id = response.data.user_id;       
-                    this.$store.commit('setToken', "Bearer " + token);
+                    this.$store.commit('setToken', token);
                     this.$store.commit('setAuthentication', true);
                     axios.defaults.headers.common["Authorization"] = "Bearer " + token;
                     localStorage.setItem("username_id", username_id);

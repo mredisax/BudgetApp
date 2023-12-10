@@ -9,9 +9,5 @@ urlpatterns = [
     path('auth/register/', views.RegistrationView.as_view(), name='register'),
     path('auth/login/', views.LoginView.as_view(), name='login'),
     path('auth/logout/', views.LogoutView.as_view(), name='logout'),
-    # path('token/', jwt_views.TokenObtainPairView.as_view(), 
-    #      name ='token_obtain_pair'),
-    # path('token/refresh/', jwt_views.TokenRefreshView.as_view(), 
-    #       name ='token_refresh')
-
+    path('auth/token/refresh/', jwt_views.TokenRefreshView.as_view(), name ='token_refresh')
 ]

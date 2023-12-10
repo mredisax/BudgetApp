@@ -34,7 +34,6 @@ class LoginView(APIView):
         username = serializer.validated_data['username']
         user = User.objects.get(username=username)
         if user:
-            print(login(request, user))
             login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -56,7 +55,6 @@ class LogoutView(APIView):
             print(request.data['username'])
             user = User.objects.get(username=request.data['username'])
             # logout(user)
-        
             token = RefreshToken.for_user(user)
             token.blacklist()
             return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
