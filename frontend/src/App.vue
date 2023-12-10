@@ -12,16 +12,36 @@ export default {
     DashBoard
   },
   beforeCreate() {
-    this.$store.commit('initializeStore')
-
-    const token = this.$store.state.token
+    this.$store.commit('initializeStore');
+    const token = this.$store.state.token;
     if (token) {
-        console.log("token exists")
-        axios.defaults.headers.common['Authorization'] = "Bearer " + token
+        console.log("T: " + token)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
-        axios.defaults.headers.common['Authorization'] = ""
+      axios.defaults.headers.common['Authorization'] = "";
     }
+    axios.interceptors.response.use(
+      response => {
+        return response;
+      },
+      async error => {
+        const originalRequest = error.config;
+        
+        if (error.response.status === 401 && !originalRequest._retry) {
+          await this.$store.dispatch('refreshTokens');
+          originalRequest._retry = true;
+          const newAccessToken = this.$store.state.token;
+          originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
+        
+          // Retry the original request
+          return axios(originalRequest);
+        }
+        return Promise.reject(error);
+      }
+    );
   },
+  methods: {
+  }
 }
 </script>
 
